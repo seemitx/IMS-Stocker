@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>เข้าสู่ระบบ - IMS</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1565C0;
+      --primary-dark: #0D47A1;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Sarabun', sans-serif;
+      background: linear-gradient(135deg, #0D47A1 0%, #1565C0 40%, #1976D2 70%, #00ACC1 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .login-card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 400px;
+      overflow: hidden;
+    }
+    .login-header {
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      padding: 32px 32px 24px;
+      text-align: center;
+      color: #fff;
+    }
+    .login-icon {
+      width: 64px; height: 64px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 16px;
+      display: inline-flex;
+      align-items: center; justify-content: center;
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+    .login-header h1 { font-size: 22px; font-weight: 800; margin: 0; }
+    .login-header p  { font-size: 13px; opacity: 0.7; margin: 4px 0 0; }
+    .login-body { padding: 28px 32px 32px; }
+    .form-label { font-size: 13px; font-weight: 600; color: #546E7A; }
+    .form-control {
+      border: 1.5px solid #E0E7EF;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 14px;
+      transition: border-color 0.2s;
+    }
+    .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(21,101,192,0.1);
+    }
+    .btn-login {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 11px;
+      font-size: 15px;
+      font-weight: 700;
+      width: 100%;
+      transition: background 0.2s;
+    }
+    .btn-login:hover { background: var(--primary-dark); }
+    .demo-info {
+      background: #F3F8FF;
+      border: 1px solid #BBDEFB;
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 12px;
+      color: #1565C0;
+      margin-bottom: 20px;
+    }
+    .demo-info strong { display: block; margin-bottom: 4px; }
+    .error-msg {
+      background: #FFEBEE;
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: #C62828;
+      margin-bottom: 14px;
+      display: none;
+    }
+    .input-icon-wrap { position: relative; }
+    .input-icon {
+      position: absolute; right: 12px; top: 50%;
+      transform: translateY(-50%);
+      color: #90A4AE; cursor: pointer;
+    }
+    .copyright {
+      text-align: center;
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      margin-top: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <div class="login-card">
+      <div class="login-header">
+        <div class="login-icon">📦</div>
+        <h1>IMS System</h1>
+        <p>ระบบจัดการสต๊อกสินค้า</p>
+      </div>
+      <div class="login-body">
+        <div class="demo-info">
+          <strong>🔑 บัญชีทดสอบ</strong>
+          Admin: admin / admin1234 &nbsp;|&nbsp; Staff: staff / staff1234
+        </div>
+        <div class="error-msg" id="errorMsg">❌ ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง</div>
+        <div class="mb-4">
+          <label class="form-label">ชื่อผู้ใช้</label>
+          <input type="text" class="form-control" id="username" placeholder="กรอกชื่อผู้ใช้" autocomplete="username">
+        </div>
+        <div class="mb-4">
+          <label class="form-label">รหัสผ่าน</label>
+          <div class="input-icon-wrap">
+            <input type="password" class="form-control" id="password" placeholder="กรอกรหัสผ่าน" autocomplete="current-password">
+            <span class="input-icon" onclick="togglePassword()" id="eyeIcon">👁️</span>
+          </div>
+        </div>
+        <button class="btn-login" id="loginBtn" onclick="doLogin()">
+          <span id="loginText">เข้าสู่ระบบ</span>
+        </button>
+      </div>
+    </div>
+    <p class="copyright">© 2024 Inventory Management System</p>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.10.5/sweetalert2.all.min.js"></script>
+  <script>
+    // ถ้า login อยู่แล้ว ไปหน้า dashboard
+    if (getSession()) window.location.href = 'index.html';
+
+    let showingPw = false;
+    function togglePassword() {
+      showingPw = !showingPw;
+      const inp = document.getElementById('password');
+      inp.type = showingPw ? 'text' : 'password';
+      document.getElementById('eyeIcon').textContent = showingPw ? '🙈' : '👁️';
+    }
+
+    document.getElementById('password').addEventListener('keydown', e => {
+      if (e.key === 'Enter') doLogin();
+    });
+
+    async function doLogin() {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+      const errEl = document.getElementById('errorMsg');
+      const btn = document.getElementById('loginBtn');
+      const txt = document.getElementById('loginText');
+
+      if (!username || !password) {
+        errEl.textContent = '⚠️ กรุณากรอกชื่อผู้ใช้และรหัสผ่าน';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      btn.disabled = true;
+      txt.textContent = 'กำลังตรวจสอบ...';
+      errEl.style.display = 'none';
+
+      // Demo mode - no API needed
+      if ((username === 'admin' && password === 'admin1234') ||
+          (username === 'staff' && password === 'staff1234')) {
+        setSession({ username, role: username === 'admin' ? 'admin' : 'staff', id: username });
+        window.location.href = 'index.html';
+        return;
+      }
+
+      // Real API login
+      const result = await apiLogin(username, password);
+      if (result.success) {
+        setSession(result.user);
+        window.location.href = 'index.html';
+      } else {
+        errEl.textContent = '❌ ' + (result.message || 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
+        errEl.style.display = 'block';
+        btn.disabled = false;
+        txt.textContent = 'เข้าสู่ระบบ';
+      }
+    }
+
+    // Override showLoader/hideLoader for login page (no loader element)
+    function showLoader() {}
+    function hideLoader() {}
+  </script>
+</body>
+</html>
