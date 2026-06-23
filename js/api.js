@@ -3,7 +3,7 @@
 // แก้ไข API_URL ให้ตรงกับ Web App URL ที่ได้จากการ Deploy
 // ============================================================
 
-const API_URL = 'api';
+const API_URL = 'https://script.google.com/macros/s/AKfycbxUjY1WtbWLInpAK0yQAcm3CSUEGkoodd6WoOWWXMH4sPPaX-is6u9AQgr0Bfoln8P5/exec';
 
 // ============================================================
 // Core Fetch Functions
